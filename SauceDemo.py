@@ -206,33 +206,42 @@ def confirm_validity_of_all_add_or_remove_buttons(valid = True, container = "Inv
     elif container == "Singular":
         buttons = driver.find_element(By.TAG_NAME, "button")
 
-    for element in buttons:
-        pass
 
     if valid == True:
             print(Fore.GREEN + "Validity of Add/Remove Items Confirmed -- No Issues Detected" + Fore.WHITE)
 
 
-# Standard account, no errors
-def test_case_1(valid = True):
+def confirm_validity_of_login(valid = True):
 
-    load_inventory_items()
-    driver.get("http://www.saucedemo.com")
-    login_to_saucedemo()
+    if driver.current_url != "https://www.saucedemo.com/inventory.html":
+        valid = False
+        print(Fore.RED + "Error Detected!" + Fore.WHITE + " " + driver.find_element(By.TAG_NAME, "h3").text, '\n')
 
-    select_sort()
-    confirm_validity_of_inventory_items()
+    if valid == True:
+        print(Fore.GREEN + "Validity of Login Confirmed -- No Issues Detected" + Fore.WHITE)
 
-    select_sort('za')
-    confirm_validity_of_inventory_items()
+    return valid
 
-    select_sort('lohi')
-    confirm_validity_of_inventory_items()
 
-    select_sort('hilo')
-    confirm_validity_of_inventory_items()
+def test_case_x(valid = True):
+    pass
 
-    driver.close()
+
+# Use this to frame comprehensive test cases as a function of the other test cases in conjunction with each other.
+def test_case_collective(valid = True):
+    pass
+
+
+def test_case_1(user, valid = True):
+
+    # Log into saucedemo
+    login_to_saucedemo(user = user)
+    
+    # If login was successful continue with testing, else exit
+    if confirm_validity_of_login() == True:
+        pass
+
+
     
    
 def test_case_2(valid = True):
@@ -284,7 +293,11 @@ def test_case_4(valid = True):
 
 
 
-test_case_1()
+load_inventory_items()
+driver.get("http://www.saucedemo.com")
+
+
+test_case_1(user = locked_username)
 
 #test_case_2()
 
@@ -295,6 +308,8 @@ test_case_1()
 
 
 
+
+driver.close()
 
 
 
