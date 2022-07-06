@@ -11,7 +11,7 @@ os.system("")
 
 # WebDriver options
 options = webdriver.ChromeOptions()
-options.add_argument("start-maximized")
+#options.add_argument("start-maximized")
 driver = webdriver.Chrome(options=options, executable_path=r"C:\Users\austi\Documents\GitHub\SauceDemo\chromedriver.exe")
 driver.implicitly_wait(1)
 wait = WebDriverWait(driver, 1)
@@ -33,13 +33,10 @@ list_descriptors = ["Item Name", "Item Description", "Item Price", "In/Out of Ca
 # Log in with standard user, pull the proper inventory item information and save to a text file for future pulls.
 def initialize():
 
-    driver.get("http://www.saucedemo.com")
-
     login_to_saucedemo(standard_username, password)
     get_inventory_list(inventory_list)
     dump_inventory_list_to_txt_file(inventory_list)
 
-    driver.close()
     
 
 # Log in
@@ -149,12 +146,12 @@ def select_add_remove_button(index):
 def print_inventory_items():
 
     for item in inventory_list:
-        print ("Item Name:          ", item[0])
+        print (Fore.CYAN + "Item Name:          ", item[0])
         print ("Item Description:   ", item[1])
         print ("Item Price:         ", item[2])
         print ("In cart:            ", item[3])
-        print ("Item Image Source:  ", item[4], '\n')
-    print('\n\n\n')
+        print ("Item Image Source:  ", item[4], '\n\n')
+    print('\n\n\n' + Fore.WHITE)
 
 
 
@@ -164,16 +161,26 @@ def confirm_validity_of_inventory_items(valid = True):
         current_inventory_list = []
         get_inventory_list(current_inventory_list)
         
+
         item_counter = 0
         for item in current_inventory_list:
             item_descriptor_counter = 0
             for val in item:
                 if(val != inventory_list[item_counter][item_descriptor_counter]):
                     valid = False
-                    print(Fore.RED + "Error Detected!" + Fore.WHITE + " Exected Value: ", inventory_list[item_counter][item_descriptor_counter], "-- Actual Value: ", val, '\n')
+                    print(Fore.RED + "Error Detected:" + Fore.WHITE + "\nExected Value: ", inventory_list[item_counter][item_descriptor_counter], "\nActual Value:  ", val, '\n')
                 item_descriptor_counter += 1
             item_counter += 1
-        
+
+
+        #item_counter = 0
+        #for item in current_inventory_list:
+        #    if (item != inventory_list[item_counter]):
+        #        valid = False
+        #        print(Fore.RED + "Error Detected!" + Fore.WHITE + " Exected Value: ", inventory_list[item_counter], "\n\nActual Value: ", item, '\n')
+        #    item_counter += 1
+
+
         if valid == True:
             print(Fore.GREEN + "Validity of Inventory Items Confirmed -- No Issues Detected" + Fore.WHITE)
 
@@ -228,27 +235,19 @@ def test_case_x(valid = True):
 
 
 # Use this to frame comprehensive test cases as a function of the other test cases in conjunction with each other.
-def test_case_collective(valid = True):
-    pass
+def test_case_collective(user, valid = True):
 
-
-def test_case_1(user, valid = True):
-
-    # Log into saucedemo
+    # Log in to saucedemo
     login_to_saucedemo(user = user)
     
     # If login was successful continue with testing, else exit
     if confirm_validity_of_login() == True:
-        pass
-
-
+        # Load in baseline data to compare against
+        test_case_sort()
     
-   
-def test_case_2(valid = True):
 
-    load_inventory_items()
-    driver.get("http://www.saucedemo.com")
-    login_to_saucedemo(user = problem_username)
+   
+def test_case_sort(valid = True):
 
     select_sort()
     confirm_validity_of_inventory_items()
@@ -262,42 +261,35 @@ def test_case_2(valid = True):
     select_sort('hilo')
     confirm_validity_of_inventory_items()
 
-    time.sleep(5)
-    driver.close()
-
 
 def test_case_3(valid = True):
 
-    load_inventory_items()
-    driver.get("http://www.saucedemo.com")
-    login_to_saucedemo()
-
-    # Insert Test Case
-
-    driver.close()
+    pass
 
 
 def test_case_4(valid = True):
 
-    load_inventory_items()
-    driver.get("http://www.saucedemo.com")
-    login_to_saucedemo()
-
-    print_inventory_items()
-    # Insert Test Case
-
-    driver.close()
+    pass
 
 
-#initialize()
+
+
+
+
+driver.get("http://www.saucedemo.com")
 
 
 
 load_inventory_items()
-driver.get("http://www.saucedemo.com")
+#initialize()
+
+test_case_collective(user = standard_username)
+#test_case_collective(user = problem_username)
+#test_case_collective(user = locked_username)
 
 
-test_case_1(user = locked_username)
+
+
 
 #test_case_2()
 
